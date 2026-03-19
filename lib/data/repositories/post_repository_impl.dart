@@ -1,0 +1,31 @@
+import 'package:flutter_threads_clone/data/datasources/local_post_data_source.dart';
+import 'package:flutter_threads_clone/data/models/post_model.dart';
+import 'package:flutter_threads_clone/domain/entities/post.dart';
+import 'package:flutter_threads_clone/domain/repositories/post_repository.dart';
+
+class PostRepositoryImpl implements PostRepository {
+  final LocalPostDataSource _local;
+  PostRepositoryImpl(this._local);
+
+  @override
+  Future<void> createPost(Post post) {
+    // БЕЗ МЕТОДА fromEntity
+    // final model = PostModel(
+    //   id: post.id,
+    //   content: post.content,
+    //   authorId: post.authorId,
+    //   createdAt: post.createdAt,
+    //   likes: post.likes,
+    // );
+    // return _local.savePost(model);
+
+    final model = PostModel.fromEntity(post);
+    return _local.savePost(model);
+  }
+
+  @override
+  Future<List<Post>> getFeed() async {
+    final models = await _local.getPosts();
+    return models.map((model) => model.toEntity()).toList();
+  }
+}

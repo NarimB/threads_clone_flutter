@@ -1,8 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_threads_clone/data/datasources/local_post_data_source.dart';
+import 'package:flutter_threads_clone/data/models/post_model.dart';
+import 'package:flutter_threads_clone/data/repositories/post_repository_impl.dart';
+import 'package:flutter_threads_clone/domain/entities/post.dart';
+import 'package:flutter_threads_clone/presentation/bloc/feed_cubit.dart';
 import 'package:flutter_threads_clone/presentation/screens/feed_screen.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(PostModelAdapter());
+
+  await _seedData();
+
   runApp(const MyApp());
+}
+
+Future<void> _seedData() async {
+  final box = await Hive.openBox<PostModel>('posts');
+
+  final posts = [
+    Post(
+      id: '1',
+      content: 'Красивый день в Астане!',
+      authorId: '1',
+      createdAt: DateTime.now().toString(),
+      likes: 3,
+    ),
+    Post(
+      id: '2',
+      content: 'Working on my Flutter project!',
+      authorId: '2',
+      createdAt: DateTime.now().toString(),
+      likes: 6,
+    ),
+    Post(
+      id: '3',
+      content: 'Знакомьтесь, это мой новый пост в Threads!',
+      authorId: '3',
+      createdAt: DateTime.now().toString(),
+      likes: 9,
+    ),
+  ];
+
+  await box.putAll(
+    posts.asMap().map(
+      (kay, post) => MapEntry(post.id, PostModel.fromEntity(post)),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -10,10 +57,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const FeedScreen(),
+    return BlocProvider(
+      create: (_) =>
+          FeedCubit(PostRepositoryImpl(LocalPostDataSource()))..loadFeed(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+        home: const FeedScreen(),
+      ),
     );
   }
 }
