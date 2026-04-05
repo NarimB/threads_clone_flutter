@@ -17,18 +17,20 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PostModel(
-      id: fields[0] as String,
-      content: fields[1] as String,
-      authorId: fields[2] as String,
-      createdAt: fields[3] as String,
-      likes: (fields[4] as num).toInt(),
+      id: fields[0] as String?,
+      content: fields[1] as String?,
+      authorId: fields[2] as String?,
+      createdAt: fields[3] as String?,
+      likes: (fields[4] as num?)?.toInt(),
+      isLiked: fields[5] == null ? false : fields[5] as bool,
+      imageUrl: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, PostModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
       ..writeByte(3)
       ..write(obj.createdAt)
       ..writeByte(4)
-      ..write(obj.likes);
+      ..write(obj.likes)
+      ..writeByte(5)
+      ..write(obj.isLiked)
+      ..writeByte(6)
+      ..write(obj.imageUrl);
   }
 
   @override
@@ -57,11 +63,13 @@ class PostModelAdapter extends TypeAdapter<PostModel> {
 // **************************************************************************
 
 _PostModel _$PostModelFromJson(Map<String, dynamic> json) => _PostModel(
-  id: json['id'] as String,
-  content: json['content'] as String,
-  authorId: json['authorId'] as String,
-  createdAt: json['createdAt'] as String,
-  likes: (json['likes'] as num).toInt(),
+  id: json['id'] as String?,
+  content: json['content'] as String?,
+  authorId: json['authorId'] as String?,
+  createdAt: json['createdAt'] as String?,
+  likes: (json['likes'] as num?)?.toInt(),
+  isLiked: json['isLiked'] as bool? ?? false,
+  imageUrl: json['imageUrl'] as String?,
 );
 
 Map<String, dynamic> _$PostModelToJson(_PostModel instance) =>
@@ -71,4 +79,6 @@ Map<String, dynamic> _$PostModelToJson(_PostModel instance) =>
       'authorId': instance.authorId,
       'createdAt': instance.createdAt,
       'likes': instance.likes,
+      'isLiked': instance.isLiked,
+      'imageUrl': instance.imageUrl,
     };

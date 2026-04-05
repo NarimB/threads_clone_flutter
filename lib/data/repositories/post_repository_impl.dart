@@ -28,4 +28,17 @@ class PostRepositoryImpl implements PostRepository {
     final models = await _local.getPosts();
     return models.map((model) => model.toEntity()).toList();
   }
+
+  @override
+  Future<void> likePost(String postId) async {
+    final box = await _local.getPosts();
+    final model = box.firstWhere((m) => m.id == postId);
+    final likes = model.likes ?? 0;
+    final updated = model.copyWith(
+      likes: model.isLiked ? likes - 1 : likes + 1,
+      isLiked: !model.isLiked,
+    );
+
+    await _local.updatePost(updated);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_threads_clone/data/datasources/local_post_data_source.dart';
+import 'package:flutter_threads_clone/data/models/comment_model.dart';
 import 'package:flutter_threads_clone/data/models/post_model.dart';
 import 'package:flutter_threads_clone/data/repositories/post_repository_impl.dart';
 import 'package:flutter_threads_clone/domain/entities/post.dart';
@@ -12,6 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(PostModelAdapter());
+  Hive.registerAdapter(CommentModelAdapter());
 
   await _seedData();
 
@@ -28,6 +30,7 @@ Future<void> _seedData() async {
       authorId: '1',
       createdAt: DateTime.now().toString(),
       likes: 3,
+      imageUrl: "",
     ),
     Post(
       id: '2',
@@ -35,6 +38,7 @@ Future<void> _seedData() async {
       authorId: '2',
       createdAt: DateTime.now().toString(),
       likes: 6,
+      imageUrl: "",
     ),
     Post(
       id: '3',
@@ -42,6 +46,7 @@ Future<void> _seedData() async {
       authorId: '3',
       createdAt: DateTime.now().toString(),
       likes: 9,
+      imageUrl: "",
     ),
   ];
 
@@ -57,9 +62,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final local = LocalPostDataSource();
+    final repository = PostRepositoryImpl(local);
+
     return BlocProvider(
-      create: (_) =>
-          FeedCubit(PostRepositoryImpl(LocalPostDataSource()))..loadFeed(),
+      create: (_) => FeedCubit(repository)..loadFeed(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
