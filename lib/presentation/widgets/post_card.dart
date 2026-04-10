@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_threads_clone/domain/entities/post.dart';
 import 'package:flutter_threads_clone/presentation/screens/comments_screen.dart';
+import 'package:flutter_threads_clone/presentation/screens/profile_screen.dart';
 import 'package:flutter_threads_clone/presentation/widgets/like_button.dart';
 
 class PostCard extends StatelessWidget {
@@ -14,7 +15,17 @@ class PostCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          CircleAvatar(radius: 20, child: Icon(Icons.person)),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ProfileScreen(userId: post.authorId!),
+                ),
+              );
+            },
+            child: CircleAvatar(radius: 20, child: Icon(Icons.person)),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
