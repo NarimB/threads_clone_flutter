@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_threads_clone/domain/entities/post.dart';
-import 'package:flutter_threads_clone/presentation/widgets/post_card.dart';
+import 'package:threads_clone/domain/entities/post.dart';
+import 'package:threads_clone/presentation/widgets/post_card.dart';
 
 class ProfileContent extends StatelessWidget {
   const ProfileContent({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/domain/entities/post.dart';
-import 'package:flutter_threads_clone/presentation/bloc/feed_cubit.dart';
+import 'package:threads_clone/domain/entities/post.dart';
+import 'package:threads_clone/presentation/bloc/feed_cubit.dart';
 
 class LikeButton extends StatefulWidget {
   const LikeButton({super.key, required this.post});
@@ -38,7 +38,7 @@ class _LikeButtonState extends State<LikeButton>
 
   @override
   Widget build(BuildContext context) {
-    final likes = widget.post.likes ?? 0;
+      final likes = widget.post.likes ?? 0;
     return GestureDetector(
       onTap: () async {
         await _controller.forward();

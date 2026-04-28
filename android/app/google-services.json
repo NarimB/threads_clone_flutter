@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "13203529616",
+    "project_id": "threads-clone-a7753",
+    "storage_bucket": "threads-clone-a7753.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13203529616:android:e44655b574fc3c3b80dd15",
+        "android_client_info": {
+          "package_name": "com.example.flutter_threads_clone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKUN3RiGhms5TnyxosKb_HaXu67AdIz3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

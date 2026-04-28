@@ -1,6 +1,6 @@
-import 'package:flutter_threads_clone/domain/entities/comment.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:threads_clone/domain/entities/comment.dart';
 
 part 'comment_model.freezed.dart';
 part 'comment_model.g.dart';
@@ -12,10 +12,10 @@ abstract class CommentModel with _$CommentModel {
 
   const factory CommentModel({
     @HiveField(0) String? id,
-    @HiveField(1) String? postId,
-    @HiveField(2) String? authorId,
+    @HiveField(1) @JsonKey(name: 'post_id') String? postId,
+    @HiveField(2) @JsonKey(name: 'author_id') String? authorId,
     @HiveField(3) String? content,
-    @HiveField(4) String? createdAt,
+    @HiveField(4) @JsonKey(name: 'created_at') String? createdAt,
   }) = _CommentModel;
 
   factory CommentModel.fromJson(Map<String, dynamic> json) =>

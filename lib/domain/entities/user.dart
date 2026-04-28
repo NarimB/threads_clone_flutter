@@ -5,9 +5,20 @@ class User {
   final String bio;
   final int postsCount;
 
-  User({required this.id, required this.username, required this.avatarUrl, this.bio = "", this.postsCount = 0});
+  User({
+    required this.id,
+    required this.username,
+    required this.avatarUrl,
+    this.bio = '',
+    this.postsCount = 0,
+  });
 
-  User copyWith({String? avatarUrl, String? username, String? bio, int? postsCount}) {
+  User copyWith({
+    String? avatarUrl,
+    String? username,
+    String? bio,
+    int? postsCount,
+  }) {
     return User(
       id: id,
       username: username ?? this.username,

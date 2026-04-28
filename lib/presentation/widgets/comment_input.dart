@@ -1,101 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/presentation/bloc/comments/comments_cubit.dart';
-import 'package:flutter_threads_clone/presentation/bloc/comments/comments_state.dart';
+import 'package:threads_clone/presentation/bloc/comments/comments_cubit.dart';
+import 'package:threads_clone/presentation/bloc/comments/comments_state.dart';
 
 class CommentInput extends StatefulWidget {
-  const CommentInput({super.key, required this.authorName});
-
-  final String authorName;
+  const CommentInput({super.key});
 
   @override
   State<CommentInput> createState() => _CommentInputState();
 }
 
 class _CommentInputState extends State<CommentInput> {
-  late TextEditingController _commentController;
-
-  @override
-  void initState() {
-    _commentController = TextEditingController();
-    super.initState();
-  }
+  final _controller = TextEditingController();
 
   @override
   void dispose() {
-    _commentController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 12, 16, 30),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.black,
-            child: Text(
-              widget.authorName[0].toUpperCase(),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade100,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 8,
+          top: 8,
+          bottom: MediaQuery.of(context).viewInsets.bottom > 0 ? 4 : 8,
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.black,
+              child: Text(
+                'M',
+                style: TextStyle(color: Colors.white, fontSize: 12),
               ),
             ),
-          ),
-          SizedBox(width: 12),
-          Expanded(
-            child: TextFormField(
-              controller: _commentController,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: 'Напишите комментарий...',
-                border: InputBorder.none,
-              ),
-              onChanged: (value) {
-                context.read<CommentsCubit>().inputChanged(value);
-              },
-            ),
-          ),
-          const SizedBox(width: 8),
-          BlocConsumer<CommentsCubit, CommentsState>(
-            listenWhen: (prev, curr) => prev.status != curr.status,
-            listener: (context, state) {
-              if (state.status == CommentsStatus.success) {
-                _commentController.clear();
-              }
-
-              if (state.status == CommentsStatus.failure) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.errorMessage ?? 'Ошибка при публикации комментария',
+            SizedBox(width: 10),
+            Expanded(
+              child: BlocBuilder<CommentsCubit, CommentsState>(
+                buildWhen: (prev, curr) => prev.inputText != curr.inputText,
+                builder: (context, state) {
+                  return TextFormField(
+                    controller: _controller,
+                    decoration: InputDecoration(
+                      hintText: 'Добавить коментарии',
+                      hintStyle: TextStyle(color: Colors.grey.shade400),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
                     ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            },
-            builder: (context, state) {
-              return TextButton(
-                onPressed: state.canSubmit
-                    ? () {
-                        context.read<CommentsCubit>().addComment();
-                      }
-                    : null,
-                child: Icon(
-                  Icons.send,
-                  size: 20,
-                  color: state.canSubmit
-                      ? Theme.of(context).primaryColor
-                      : Colors.black,
-                ),
-              );
-            },
-          ),
-        ],
+                    onChanged: (String value) {
+                      context.read<CommentsCubit>().inputChanged(value);
+                    },
+                    onFieldSubmitted: (_) => _submit(context),
+                  );
+                },
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                _submit(context);
+              },
+              icon: Icon(Icons.send_rounded),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void _submit(BuildContext context) {
+    context.read<CommentsCubit>().addComment();
+    _controller.clear();
   }
 }

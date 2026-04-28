@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/presentation/bloc/create_post/create_post_cubit.dart';
-import 'package:flutter_threads_clone/presentation/bloc/create_post/create_post_state.dart';
-import 'package:flutter_threads_clone/presentation/bloc/feed_cubit.dart';
+import 'package:threads_clone/presentation/bloc/create_post/create_post_cubit.dart';
+import 'package:threads_clone/presentation/bloc/create_post/create_post_state.dart';
+import 'package:threads_clone/presentation/bloc/feed_cubit.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -33,7 +33,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Новый пост'),
-        centerTitle: true,
         actions: [
           BlocConsumer<CreatePostCubit, CreatePostState>(
             listenWhen: (prev, curr) => prev.status != curr.status,
@@ -52,6 +51,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 );
               }
             },
+
             builder: (context, state) {
               return TextButton(
                 onPressed: state.canSubmit
@@ -60,7 +60,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       }
                     : null,
                 child: Text(
-                  'Опубликровать',
+                  'Опубликовать',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               );
@@ -75,7 +75,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             Row(
               children: [
                 const CircleAvatar(radius: 20, child: Icon(Icons.person)),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Expanded(
                   child: TextFormField(
                     controller: _controller,
@@ -129,6 +129,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 );
               },
             ),
+
             SizedBox(height: 12),
             Row(
               children: [

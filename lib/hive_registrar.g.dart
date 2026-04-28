@@ -3,8 +3,8 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:flutter_threads_clone/data/models/comment_model.dart';
-import 'package:flutter_threads_clone/data/models/post_model.dart';
+import 'package:threads_clone/data/models/comment_model.dart';
+import 'package:threads_clone/data/models/post_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {

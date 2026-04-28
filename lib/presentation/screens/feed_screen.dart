@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/data/datasources/local_post_data_source.dart';
-import 'package:flutter_threads_clone/data/repositories/post_repository_impl.dart';
-import 'package:flutter_threads_clone/presentation/bloc/create_post/create_post_cubit.dart';
-import 'package:flutter_threads_clone/presentation/bloc/feed_cubit.dart';
-import 'package:flutter_threads_clone/presentation/bloc/feed_state.dart';
-import 'package:flutter_threads_clone/presentation/screens/create_post_screen.dart';
-import 'package:flutter_threads_clone/presentation/widgets/post_card.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:threads_clone/domain/repositories/auth_repository.dart';
+import 'package:threads_clone/domain/repositories/post_repository.dart';
+import 'package:threads_clone/locator.dart';
+import 'package:threads_clone/presentation/bloc/create_post/create_post_cubit.dart';
+import 'package:threads_clone/presentation/bloc/feed_cubit.dart';
+import 'package:threads_clone/presentation/bloc/feed_state.dart';
+import 'package:threads_clone/presentation/screens/create_post_screen.dart';
+import 'package:threads_clone/presentation/widgets/post_card.dart';
 
-class FeedScreen extends StatelessWidget {
+class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
+
+  @override
+  State<FeedScreen> createState() => _FeedScreenState();
+}
+
+class _FeedScreenState extends State<FeedScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<FeedCubit>().loadFeed();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,63 +32,78 @@ class FeedScreen extends StatelessWidget {
           'Threads v2.0',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
-              final local = LocalPostDataSource();
-              final repository = PostRepositoryImpl(local);
-              final imagePicker = ImagePicker();
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => BlocProvider(
-                    create: (_) => CreatePostCubit(repository, imagePicker),
+                    create: (_) => CreatePostCubit(
+                      locator<PostRepository>(),
+                      locator<ImagePicker>(),
+                      locator<AuthRepository>(),
+                    ),
                     child: CreatePostScreen(),
                   ),
                 ),
-              );
+              ).then((_) {
+                if (context.mounted) {
+                  context.read<FeedCubit>().loadFeed();
+                }
+              });
             },
             icon: Icon(Icons.edit_outlined),
           ),
         ],
       ),
       body: BlocConsumer<FeedCubit, FeedState>(
+        listener: (context, state) {},
         builder: (context, state) {
-          if (state.posts.isEmpty && state.status == FeedStatus.loading) {
-            return const Center(child: CircularProgressIndicator());
+          if (state.status == FeedStatus.loading) {
+            return Center(child: CircularProgressIndicator());
           }
 
-          if (state.posts.isEmpty && state.status != FeedStatus.loading) {
-            return const Center(child: Text('Нет постов'));
+          if (state.posts.isEmpty) {
+            return Text('Список пуст');
           }
 
-          return Column(
-            children: [
-              if (state.status == FeedStatus.loading && state.posts.isNotEmpty)
-                const LinearProgressIndicator(),
-              Expanded(
-                child: ListView.separated(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  itemBuilder: (context, index) {
-                    final post = state.posts[index];
-                    return PostCard(post: post);
-                  },
-                  separatorBuilder: (_, _) => Divider(height: 1),
-                  itemCount: state.posts.length,
-                ),
-              ),
-            ],
+          return ListView.separated(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            itemBuilder: (context, index) {
+              final post = state.posts[index];
+              return PostCard(post: post);
+            },
+            separatorBuilder: (_, _) => Divider(height: 1),
+            itemCount: state.posts.length,
           );
-        },
-        listener: (context, state) {
-          if (state.status == FeedStatus.error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage ?? 'Ошибка')),
-            );
-          }
         },
       ),
     );
   }
 }
+
+
+//  final posts = [
+//       Post(
+//         id: '1',
+//         content: 'Красивый день в Астана!',
+//         authorId: '1',
+//         createdAt: DateTime.now().toString(),
+//         likes: 3,
+//       ),
+//       Post(
+//         id: '2',
+//         content: 'Workng on my Flutter project!',
+//         authorId: '2',
+//         createdAt: DateTime.now().toString(),
+//         likes: 6,
+//       ),
+//       Post(
+//         id: '3',
+//         content: 'Знакомьтесь, это мой новый пост!',
+//         authorId: '3',
+//         createdAt: DateTime.now().toString(),
+//         likes: 9,
+//       ),
+//     ];

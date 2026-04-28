@@ -1,7 +1,7 @@
+import 'package:threads_clone/domain/entities/post.dart';
+import 'package:threads_clone/domain/repositories/post_repository.dart';
+import 'package:threads_clone/presentation/bloc/feed_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/domain/entities/post.dart';
-import 'package:flutter_threads_clone/domain/repositories/post_repository.dart';
-import 'package:flutter_threads_clone/presentation/bloc/feed_state.dart';
 
 class FeedCubit extends Cubit<FeedState> {
   final PostRepository _repository;
@@ -13,6 +13,7 @@ class FeedCubit extends Cubit<FeedState> {
 
     try {
       final posts = await _repository.getFeed();
+
       emit(
         state.copyWith(
           status: FeedStatus.success,
@@ -37,7 +38,6 @@ class FeedCubit extends Cubit<FeedState> {
       authorId: 'me',
       createdAt: '',
       likes: 0,
-      imageUrl: "",
     );
 
     try {
@@ -57,7 +57,7 @@ class FeedCubit extends Cubit<FeedState> {
     final updatedPosts = state.posts.map((post) {
       if (post.id != postId) return post;
 
-      final likes = post.likes ?? 0;
+        final likes = post.likes ?? 0;
 
       return post.copyWith(
         likes: post.isLiked ? likes - 1 : likes + 1,

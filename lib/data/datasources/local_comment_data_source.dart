@@ -1,5 +1,5 @@
-import 'package:flutter_threads_clone/data/models/comment_model.dart';
-import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:threads_clone/data/models/comment_model.dart';
 
 class LocalCommentDataSource {
   static const _boxName = 'comments';
@@ -9,8 +9,11 @@ class LocalCommentDataSource {
 
   Future<List<CommentModel>> getCommentsByPost(String postId) async {
     final box = await _box;
+
     final comments = box.values.where((c) => c.postId == postId).toList();
+
     comments.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+
     return comments;
   }
 
@@ -19,9 +22,16 @@ class LocalCommentDataSource {
     await box.put(comment.id, comment);
   }
 
-  Future<int> getCommentCountByPost(String postId) async {
+ Future<int> getCountByPost(String id) async {
     final box = await _box;
-    final count = box.values.where((c) => c.postId == postId).toList();
-    return count.length;
+
+    final comments = box.values.where((c) => c.id == id).toList();
+
+    return comments.length;
+  }
+
+    Future<void> clear() async {
+    final box = await _box;
+    await box.clear();
   }
 }

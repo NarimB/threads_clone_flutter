@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/domain/entities/user.dart';
-import 'package:flutter_threads_clone/domain/repositories/post_repository.dart';
-import 'package:flutter_threads_clone/presentation/bloc/profile/profile_state.dart';
+import 'package:threads_clone/domain/entities/user.dart';
+import 'package:threads_clone/domain/repositories/post_repository.dart';
+import 'package:threads_clone/presentation/bloc/profile/profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   final PostRepository _postRepository;
@@ -13,15 +13,17 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     try {
       final posts = await _postRepository.getPostsByUser(userId);
+
       final user = _getMockUser(userId, posts.length);
+
       emit(
-        state.copyWith(status: ProfileStatus.success, user: user, posts: posts),
+        state.copyWith(status: ProfileStatus.loaded, posts: posts, user: user),
       );
     } catch (e) {
       emit(
         state.copyWith(
           status: ProfileStatus.failure,
-          errorMessage: 'Ошибка загрузки профиля',
+          errorMessage: 'Не удалось загрузить профиль',
         ),
       );
     }
@@ -31,34 +33,33 @@ class ProfileCubit extends Cubit<ProfileState> {
     final mockUsers = {
       'me': User(
         id: 'me',
-        username: 'me',
-        bio: 'Flutter developer',
+        username: 'Me',
         avatarUrl: '',
+        bio: 'Flutter Dev',
         postsCount: postCount,
       ),
       '1': User(
         id: '1',
         username: 'Aizhan',
-        bio: 'Люблю кофе и программирование на Flutter',
         avatarUrl: '',
+        bio: 'Люблю кофе и Flutter',
         postsCount: postCount,
       ),
       '2': User(
         id: '2',
         username: 'Dani',
-        bio: 'Backend developer',
         avatarUrl: '',
+        bio: 'Backend Developer',
         postsCount: postCount,
       ),
       '3': User(
         id: '3',
         username: 'Qana',
-        bio: 'IT user',
         avatarUrl: '',
+        bio: 'IT user',
         postsCount: postCount,
       ),
     };
-
     return mockUsers[userId] ??
         User(
           id: userId,

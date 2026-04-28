@@ -1,5 +1,5 @@
-import 'package:flutter_threads_clone/domain/entities/post.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:threads_clone/domain/entities/post.dart';
 
 part 'feed_state.freezed.dart';
 

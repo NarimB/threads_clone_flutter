@@ -1,31 +1,29 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/domain/entities/comment.dart';
-import 'package:flutter_threads_clone/domain/repositories/comment_repository.dart';
-import 'package:flutter_threads_clone/presentation/bloc/comments/comments_state.dart';
+import 'package:threads_clone/domain/entities/comment.dart';
+import 'package:threads_clone/domain/repositories/auth_repository.dart';
+import 'package:threads_clone/domain/repositories/comment_repository.dart';
+import 'package:threads_clone/presentation/bloc/comments/comments_state.dart';
 
 class CommentsCubit extends Cubit<CommentsState> {
   final CommentRepository _repository;
   final String _postId;
+  final AuthRepository _authRepository;
 
-  CommentsCubit(this._repository, this._postId) : super(const CommentsState());
+  CommentsCubit(this._repository, this._postId, this._authRepository)
+    : super(const CommentsState());
 
-  Future<void> loadComments() async {
-    emit(state.copyWith(status: CommentsStatus.loading));
+  Future<void> loadComment() async {
+    emit(state.copyWith(status: CommentStatus.loading));
 
     try {
       final comments = await _repository.getComments(_postId);
-      emit(
-        state.copyWith(
-          status: CommentsStatus.success,
-          comments: comments,
-          errorMessage: null,
-        ),
-      );
+
+      emit(state.copyWith(comments: comments, status: CommentStatus.success));
     } catch (e) {
       emit(
         state.copyWith(
-          status: CommentsStatus.failure,
-          errorMessage: 'Ошибка загрузки комментариев',
+          status: CommentStatus.failure,
+          errorMessage: 'Ошибка загрузки',
         ),
       );
     }
@@ -38,21 +36,22 @@ class CommentsCubit extends Cubit<CommentsState> {
   Future<void> addComment() async {
     if (!state.canSubmit) return;
 
-    emit(state.copyWith(status: CommentsStatus.loading));
+    final authUser = _authRepository.currentUser;
 
     final comment = Comment(
-      id: DateTime.now().millisecond.toString(),
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
       postId: _postId,
-      authorId: 'me',
+      authorId: authUser!.id,
       content: state.inputText.trim(),
       createdAt: DateTime.now().toIso8601String(),
     );
 
     try {
       await _repository.addComment(comment);
+
       emit(
         state.copyWith(
-          status: CommentsStatus.success,
+          status: CommentStatus.success,
           inputText: '',
           comments: [...state.comments, comment],
         ),
@@ -60,8 +59,8 @@ class CommentsCubit extends Cubit<CommentsState> {
     } catch (e) {
       emit(
         state.copyWith(
-          status: CommentsStatus.failure,
-          errorMessage: 'Ошибка добавления комментария',
+          status: CommentStatus.failure,
+          errorMessage: 'Ошибка при отправке коментарий',
         ),
       );
     }

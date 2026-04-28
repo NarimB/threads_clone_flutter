@@ -1,4 +1,4 @@
-import 'package:flutter_threads_clone/data/models/post_model.dart';
+import 'package:threads_clone/data/models/post_model.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 class LocalPostDataSource {
@@ -9,6 +9,7 @@ class LocalPostDataSource {
   Future<List<PostModel>> getPosts() async {
     final box = await _box;
     final posts = box.values.toList();
+
     return posts;
   }
 
@@ -22,10 +23,12 @@ class LocalPostDataSource {
     await box.put(post.id, post);
   }
 
-  Future<List<PostModel>> getPostsByUser(String authorId) async {
+  Future<List<PostModel>> getPostByUser(String authorId) async {
     final box = await _box;
     final posts = box.values.where((e) => e.authorId == authorId).toList();
+
     posts.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+
     return posts;
   }
 

@@ -1,10 +1,10 @@
-import 'package:flutter_threads_clone/domain/entities/post.dart';
-import 'package:flutter_threads_clone/domain/entities/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:threads_clone/domain/entities/post.dart';
+import 'package:threads_clone/domain/entities/user.dart';
 
 part 'profile_state.freezed.dart';
 
-enum ProfileStatus { initial, loading, success, failure }
+enum ProfileStatus { initial, loading, loaded, failure }
 
 @freezed
 abstract class ProfileState with _$ProfileState {

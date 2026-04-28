@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_threads_clone/data/datasources/local_comment_data_source.dart';
-import 'package:flutter_threads_clone/data/repositories/comment-repository_impl.dart';
-import 'package:flutter_threads_clone/domain/entities/post.dart';
-import 'package:flutter_threads_clone/presentation/bloc/comments/comments_cubit.dart';
-import 'package:flutter_threads_clone/presentation/bloc/comments/comments_state.dart';
-import 'package:flutter_threads_clone/presentation/widgets/comment_input.dart';
-import 'package:flutter_threads_clone/presentation/widgets/comment_title.dart';
+import 'package:threads_clone/domain/entities/post.dart';
+import 'package:threads_clone/domain/repositories/auth_repository.dart';
+import 'package:threads_clone/domain/repositories/comment_repository.dart';
+import 'package:threads_clone/locator.dart';
+import 'package:threads_clone/presentation/bloc/comments/comments_cubit.dart';
+import 'package:threads_clone/presentation/bloc/comments/comments_state.dart';
+import 'package:threads_clone/presentation/widgets/comment_input.dart';
+import 'package:threads_clone/presentation/widgets/comment_tile.dart';
 
 class CommentsScreen extends StatelessWidget {
   const CommentsScreen({super.key, required this.post});
@@ -20,9 +21,10 @@ class CommentsScreen extends StatelessWidget {
       builder: (context) {
         return BlocProvider(
           create: (context) => CommentsCubit(
-            CommentRepositoryImpl(LocalCommentDataSource()),
+            locator<CommentRepository>(),
             post.id!,
-          )..loadComments(),
+            locator<AuthRepository>(),
+          )..loadComment(),
           child: CommentsScreen(post: post),
         );
       },
@@ -54,7 +56,7 @@ class CommentsScreen extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'Комментарий',
+                  'Коментарий',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
@@ -71,8 +73,7 @@ class CommentsScreen extends StatelessWidget {
           Expanded(
             child: BlocBuilder<CommentsCubit, CommentsState>(
               builder: (context, state) {
-                if (state.status == CommentsStatus.loading &&
-                    state.comments.isEmpty) {
+                if (state.status == CommentStatus.loading) {
                   return Center(child: CircularProgressIndicator());
                 }
 
@@ -94,7 +95,7 @@ class CommentsScreen extends StatelessWidget {
 
                 return ListView.separated(
                   itemBuilder: (context, index) {
-                    return CommentTitle(comment: state.comments[index]);
+                    return CommentTile(comment: state.comments[index]);
                   },
                   separatorBuilder: (_, _) =>
                       Divider(height: 1, color: Colors.grey.shade100),
@@ -104,7 +105,7 @@ class CommentsScreen extends StatelessWidget {
             ),
           ),
           Divider(height: 1, color: Colors.grey.shade200),
-          CommentInput(authorName: 'me'),
+          CommentInput(),
         ],
       ),
     );

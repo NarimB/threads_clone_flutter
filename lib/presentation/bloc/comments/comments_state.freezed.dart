@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CommentsState {
 
- CommentsStatus get status; List<Comment> get comments; String get inputText; String? get errorMessage;
+ CommentStatus get status; List<Comment> get comments; String get inputText; String? get errorMessage;
 /// Create a copy of CommentsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $CommentsStateCopyWith<$Res>  {
   factory $CommentsStateCopyWith(CommentsState value, $Res Function(CommentsState) _then) = _$CommentsStateCopyWithImpl;
 @useResult
 $Res call({
- CommentsStatus status, List<Comment> comments, String inputText, String? errorMessage
+ CommentStatus status, List<Comment> comments, String inputText, String? errorMessage
 });
 
 
@@ -65,7 +65,7 @@ class _$CommentsStateCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? comments = null,Object? inputText = null,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as CommentsStatus,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
+as CommentStatus,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
 as List<Comment>,inputText: null == inputText ? _self.inputText : inputText // ignore: cast_nullable_to_non_nullable
 as String,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CommentsStatus status,  List<Comment> comments,  String inputText,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CommentStatus status,  List<Comment> comments,  String inputText,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommentsState() when $default != null:
 return $default(_that.status,_that.comments,_that.inputText,_that.errorMessage);case _:
@@ -174,7 +174,7 @@ return $default(_that.status,_that.comments,_that.inputText,_that.errorMessage);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CommentsStatus status,  List<Comment> comments,  String inputText,  String? errorMessage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CommentStatus status,  List<Comment> comments,  String inputText,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _CommentsState():
 return $default(_that.status,_that.comments,_that.inputText,_that.errorMessage);case _:
@@ -194,7 +194,7 @@ return $default(_that.status,_that.comments,_that.inputText,_that.errorMessage);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CommentsStatus status,  List<Comment> comments,  String inputText,  String? errorMessage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CommentStatus status,  List<Comment> comments,  String inputText,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _CommentsState() when $default != null:
 return $default(_that.status,_that.comments,_that.inputText,_that.errorMessage);case _:
@@ -209,10 +209,10 @@ return $default(_that.status,_that.comments,_that.inputText,_that.errorMessage);
 
 
 class _CommentsState extends CommentsState {
-  const _CommentsState({this.status = CommentsStatus.initial, final  List<Comment> comments = const [], this.inputText = '', this.errorMessage}): _comments = comments,super._();
+  const _CommentsState({this.status = CommentStatus.initial, final  List<Comment> comments = const [], this.inputText = '', this.errorMessage}): _comments = comments,super._();
   
 
-@override@JsonKey() final  CommentsStatus status;
+@override@JsonKey() final  CommentStatus status;
  final  List<Comment> _comments;
 @override@JsonKey() List<Comment> get comments {
   if (_comments is EqualUnmodifiableListView) return _comments;
@@ -253,7 +253,7 @@ abstract mixin class _$CommentsStateCopyWith<$Res> implements $CommentsStateCopy
   factory _$CommentsStateCopyWith(_CommentsState value, $Res Function(_CommentsState) _then) = __$CommentsStateCopyWithImpl;
 @override @useResult
 $Res call({
- CommentsStatus status, List<Comment> comments, String inputText, String? errorMessage
+ CommentStatus status, List<Comment> comments, String inputText, String? errorMessage
 });
 
 
@@ -273,7 +273,7 @@ class __$CommentsStateCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? comments = null,Object? inputText = null,Object? errorMessage = freezed,}) {
   return _then(_CommentsState(
 status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as CommentsStatus,comments: null == comments ? _self._comments : comments // ignore: cast_nullable_to_non_nullable
+as CommentStatus,comments: null == comments ? _self._comments : comments // ignore: cast_nullable_to_non_nullable
 as List<Comment>,inputText: null == inputText ? _self.inputText : inputText // ignore: cast_nullable_to_non_nullable
 as String,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,

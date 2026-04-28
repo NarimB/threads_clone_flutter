@@ -1,5 +1,6 @@
+// presentation/widgets/profile_header.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_threads_clone/domain/entities/user.dart';
+import 'package:threads_clone/domain/entities/user.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
